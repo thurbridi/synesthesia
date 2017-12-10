@@ -7,7 +7,7 @@ For a lack of a better name, this project uses a [Teensy 3.2](https://www.pjrc.c
 
 ---
 
-## Dependencys
+## Dependencies
 - [Adafruit NeoPixel Library](https://github.com/adafruit/Adafruit_NeoPixel)
 
 ## Setup
