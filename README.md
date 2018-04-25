@@ -13,4 +13,5 @@ For a lack of a better name, this project uses a [Teensy 3.2](https://www.pjrc.c
 ## Setup
 1. Change the variables NUM\_LEDS and LED\_PIN to the number of LEDs in your strip and the pin you are using, if needed;
 2. Upload the sketch to your Teensy, make sure the USB Type is set to "Audio";
-3. (Windows) [Send your audio output to your Teensy](https://answers.microsoft.com/en-us/windows/forum/windows_10-hardware/output-audio-to-multiple-devices-in-windows-10/b284def2-d684-4f1f-87a0-f562f556aedd?auth=1)
+3. Send your audio output to your Teensy;
+    1. (Windows) [Use Window's stereo mix](https://answers.microsoft.com/en-us/windows/forum/windows_10-hardware/output-audio-to-multiple-devices-in-windows-10/b284def2-d684-4f1f-87a0-f562f556aedd?auth=1) or download a [virtual audio mixer](https://www.vb-audio.com/Voicemeeter/index.htm).
