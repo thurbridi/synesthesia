@@ -1,6 +1,8 @@
 # Synesthesia
 This project uses a [Teensy 3.2](https://www.pjrc.com/store/teensy32.html) to control an LED strip based on the sound output of your computer.
 
+![rainbow effect](img/rainbow_effect.gif)
+
 ---
 
 ## Dependencies
