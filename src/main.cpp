@@ -18,16 +18,17 @@ AudioConnection patchCord3(mixer1, fft1024);
 AudioOutputI2S out1;
 // GUItool: end automatically generated code
 
-const auto LED_PIN = 0;
-const auto NUM_LEDS = 19;
+const int LED_PIN = 0;
+const int NUM_LEDS = 31;
+const int N_BINS = ceil(NUM_LEDS / 2.0);
 
-// An array to hold the 10 frequency bands
-float level[10];
-double red[10];
-double green[10];
-double blue[10];
+float level[N_BINS];
+float red[N_BINS];
+float green[N_BINS];
+float blue[N_BINS];
 auto hue = 0.0;
 auto sat = 1.0;
+auto elapsed_hue = 0;
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 
@@ -54,21 +55,21 @@ void loop()
     // music is heard in octaves, but the FFT data
     // is linear, so for the higher octaves, read
     // many FFT bins together.
-    level[0] = fft1024.read(0);
-    level[1] = fft1024.read(1, 2);
-    level[2] = fft1024.read(3, 5);
-    level[3] = fft1024.read(6, 11);
-    level[4] = fft1024.read(12, 22);
-    level[5] = fft1024.read(23, 43);
-    level[6] = fft1024.read(44, 81);
-    level[7] = fft1024.read(82, 151);
-    level[8] = fft1024.read(152, 278);
-    level[9] = fft1024.read(279, 511);
+    for (auto i = 0; i < N_BINS - 2; i++)
+    {
+      auto r = pow(512, 1.0 / (N_BINS - 1));
+      level[i] = fft1024.read(floor(pow(r, i)) - 1, floor(pow(r, i + 1) - 1));
+    }
 
-    hue++;
-    hue = fmod(hue, 360);
+    auto now = millis();
+    if (now - elapsed_hue > 100)
+    {
+      hue += 5;
+      hue = fmod(hue, 360);
+      elapsed_hue = now;
+    }
 
-    for (auto i = 0; i < 10; i++)
+    for (auto i = 0; i < N_BINS; i++)
     {
       auto chroma = level[i] * sat;
       auto X = chroma * (1 - abs(fmod(hue / 60.0, 2) - 1));
@@ -114,16 +115,13 @@ void loop()
       blue[i] = (Bs + m) * 255;
     }
 
-    for (auto i = 0; i < 9; i++)
+    for (auto i = 0; i < N_BINS; i++)
     {
-      strip.setPixelColor(i, red[9 - i], blue[9 - i], green[9 - i]);
+      strip.setPixelColor(i, red[N_BINS - i - 1], blue[N_BINS - i - 1], green[N_BINS - i - 1]);
     }
-
-    strip.setPixelColor(9, red[0], blue[0], green[0]);
-
-    for (auto i = 0; i < 9; i++)
+    for (auto i = N_BINS; i < NUM_LEDS; i++)
     {
-      strip.setPixelColor(i + 10, red[i + 1], blue[i + 1], green[i + 1]);
+      strip.setPixelColor(i, red[i - N_BINS + 1], blue[i - N_BINS + 1], green[i - N_BINS + 1]);
     }
 
     strip.show();
